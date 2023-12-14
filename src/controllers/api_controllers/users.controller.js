@@ -22,7 +22,7 @@ const getAllUsers = async (req, res) => {
 const getUserByUsername = async (req, res) => {
   try {
     const user = await Users.findOne({
-      where: { username: req.body.username },
+      where: { username: req.params.username },
       attributes: {
         exclude: ["password"],
       },
