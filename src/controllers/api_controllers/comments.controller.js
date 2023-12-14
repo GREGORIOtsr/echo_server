@@ -1,9 +1,16 @@
 const Comments = require("../../models/comments.model");
+const Users = require("../../models/users.model");
 
 const getCommentsByUser = async (req, res) => {
   try {
+    const user = await Users.findOne({
+      where: { username: req.params.username },
+      attributes: {
+        exclude: ["password"],
+      },
+    });
     const comments = await Comments.findAll({
-      where: { user_id: req.body.user_id },
+      where: { user_id: user.dataValues.user_id },
     });
     comments = comments.map((c) => c.dataValues);
     res.status(200).json({ comments });
@@ -15,7 +22,7 @@ const getCommentsByUser = async (req, res) => {
 const getCommentsByPost = async (req, res) => {
   try {
     const comments = await Comments.findAll({
-      where: { post_id: req.body.post_id },
+      where: { post_id: req.params.postId },
     });
     comments = comments.map((c) => c.dataValues);
     res.status(200).json({ comments });

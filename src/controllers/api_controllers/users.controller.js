@@ -22,7 +22,7 @@ const getAllUsers = async (req, res) => {
 const getUserByUsername = async (req, res) => {
   try {
     const user = await Users.findOne({
-      where: { username: req.body.username },
+      where: { username: req.params.username },
       attributes: {
         exclude: ["password"],
       },
@@ -51,7 +51,7 @@ const updateUser = async (req, res) => {
         profile_picture: req.body.profile_picture,
       },
       {
-        where: { username: req.body.username },
+        where: { username: req.params.username },
       }
     );
     res.status(200).json({message: 'User updated.'});
@@ -63,7 +63,7 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const user = await Users.findOne({
-      where: { username: req.body.username },
+      where: { username: req.params.username },
       attributes: {
         exclude: ["password"],
       },

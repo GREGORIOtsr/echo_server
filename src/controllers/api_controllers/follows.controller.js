@@ -2,8 +2,14 @@ const Follows = require("../../models/follows.model");
 
 const getFollowingByUser = async (req, res) => {
   try {
+    const user = await Users.findOne({
+      where: { username: req.params.username },
+      attributes: {
+        exclude: ["password"],
+      },
+    });
     const following = await Follows.findAll({
-      where: { following_user_id: req.body.user_id },
+      where: { following_user_id: user.dataValues.user_id },
     });
     following = following.map((f) => f.dataValues);
     res.status(200).json({ following });
@@ -14,8 +20,14 @@ const getFollowingByUser = async (req, res) => {
 
 const getFollowersByUser = async (req, res) => {
   try {
+    const user = await Users.findOne({
+      where: { username: req.params.username },
+      attributes: {
+        exclude: ["password"],
+      },
+    });
     const followers = await Follows.findAll({
-      where: { followed_user_id: req.body.user_id },
+      where: { followed_user_id: user.dataValues.user_id },
     });
     followers = followers.map((f) => f.dataValues);
     res.status(200).json({ followers });

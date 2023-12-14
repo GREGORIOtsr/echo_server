@@ -1,4 +1,5 @@
 const Posts = require("../../models/posts.model");
+const Users = require("../../models/users.model");
 const Comments = require("../../models/comments.model");
 const Likes = require("../../models/likes.model");
 
@@ -14,8 +15,14 @@ const getAllPosts = async (req, res) => {
 
 const getPostsByUser = async (req, res) => {
   try {
+    const user = await Users.findOne({
+      where: { username: req.params.username },
+      attributes: {
+        exclude: ["password"],
+      },
+    });
     const posts = await Posts.findAll({
-      where: { user_id: req.body.user_id },
+      where: { user_id: user.dataValues.user_id },
     });
     posts = posts.map((p) => p.dataValues);
     res.status(200).json(posts);
@@ -26,8 +33,14 @@ const getPostsByUser = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
+    const user = await Users.findOne({
+      where: { username: req.params.username },
+      attributes: {
+        exclude: ["password"],
+      },
+    });
     const data = {
-      user_id: req.body.user_id,
+      user_id: user.dataValues.user_id,
       body: req.body.body,
     };
     const post = await Posts.create(data);
@@ -44,7 +57,7 @@ const updatePost = async (req, res) => {
         body: req.body.body,
       },
       {
-        where: { post_id: req.body.post_id },
+        where: { post_id: req.params.id },
       }
     );
     res.status(200).json({ message: "Post updated." });
@@ -55,11 +68,17 @@ const updatePost = async (req, res) => {
 
 const deleteAllPostsFromUser = async (req, res) => {
   try {
-    await Posts.destroy({ where: { user_id: req.body.user_id } });
+    const user = await Users.findOne({
+      where: { username: req.params.username },
+      attributes: {
+        exclude: ["password"],
+      },
+    });
+    await Posts.destroy({ where: { user_id: user.dataValues.user_id } });
     res
       .status(200)
       .json({
-        message: `All posts from ${req.body.username} deleted succesfully.`,
+        message: `All posts from ${req.params.username} deleted succesfully.`,
       });
   } catch (error) {
     res.status(400).json({ message: `ERROR: ${error.stack}` });
@@ -68,7 +87,7 @@ const deleteAllPostsFromUser = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
-    const id = req.body.post_id;
+    const id = req.params.id;
     await Likes.destroy({where: {post_id: id}});
     await Comments.destroy({where: {post_id: id}});
     await Posts.destroy({ where: { post_id: id } });
