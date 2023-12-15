@@ -44,7 +44,6 @@ const Users = db.define(
       allowNull: true,
       defaultValue: "none",
       validate: {
-        is: regex.username,
         max: 32,
         min: 4,
       },
@@ -53,7 +52,7 @@ const Users = db.define(
       field: "profile_picture",
       type: DataTypes.TEXT,
       allowNull: true,
-      defaultValue: "none",
+      defaultValue: "default.png",
       validate: {
         is: regex.image,
       },

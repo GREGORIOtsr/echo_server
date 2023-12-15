@@ -9,11 +9,11 @@ const getCommentsByUser = async (req, res) => {
         exclude: ["password"],
       },
     });
-    const comments = await Comments.findAll({
+    let comments = await Comments.findAll({
       where: { user_id: user.dataValues.user_id },
     });
     comments = comments.map((c) => c.dataValues);
-    res.status(200).json({ comments });
+    res.status(200).json(comments);
   } catch (error) {
     res.status(400).json({ message: `ERROR: ${error.stack}` });
   }
@@ -21,11 +21,12 @@ const getCommentsByUser = async (req, res) => {
 
 const getCommentsByPost = async (req, res) => {
   try {
-    const comments = await Comments.findAll({
+    let comments = await Comments.findAll({
       where: { post_id: req.params.postId },
     });
+    console.log(comments, '**************************');
     comments = comments.map((c) => c.dataValues);
-    res.status(200).json({ comments });
+    res.status(200).json(comments);
   } catch (error) {
     res.status(400).json({ message: `ERROR: ${error.stack}` });
   }
@@ -33,8 +34,14 @@ const getCommentsByPost = async (req, res) => {
 
 const createComment = async (req, res) => {
   try {
+    const user = await Users.findOne({
+      where: { username: req.body.username },
+      attributes: {
+        exclude: ["password"],
+      },
+    });
     const comment = await Comments.create({
-      user_id: req.body.user_id,
+      user_id: user.dataValues.user_id,
       post_id: req.body.post_id,
       comment: req.body.comment,
     });
@@ -48,10 +55,10 @@ const updateComment = async (req, res) => {
   try {
     await Comments.update(
       {
-        body: req.body.comment,
+        comment: req.body.comment,
       },
       {
-        where: { comment_id: req.body.comment_id },
+        where: { comment_id: req.params.id },
       }
     );
     res.status(200).json({message: 'Comment updated.'});
@@ -62,7 +69,7 @@ const updateComment = async (req, res) => {
 
 const deleteComment = async (req, res) => {
   try {
-    await Comments.destroy({where: {comment_id: req.body.comment_id}});
+    await Comments.destroy({where: {comment_id: req.params.id}});
     res.status(200).json({message: 'Comment deleted.'});
   } catch (error) {
     res.status(400).json({ message: `ERROR: ${error.stack}` });

@@ -5,7 +5,7 @@ const Likes = require("../../models/likes.model");
 
 const getAllPosts = async (req, res) => {
   try {
-    const posts = await Posts.findAll();
+    let posts = await Posts.findAll();
     posts = posts.map((p) => p.dataValues);
     res.status(200).json(posts);
   } catch (error) {
@@ -21,7 +21,7 @@ const getPostsByUser = async (req, res) => {
         exclude: ["password"],
       },
     });
-    const posts = await Posts.findAll({
+    let posts = await Posts.findAll({
       where: { user_id: user.dataValues.user_id },
     });
     posts = posts.map((p) => p.dataValues);
@@ -34,7 +34,7 @@ const getPostsByUser = async (req, res) => {
 const createPost = async (req, res) => {
   try {
     const user = await Users.findOne({
-      where: { username: req.params.username },
+      where: { username: req.body.username },
       attributes: {
         exclude: ["password"],
       },

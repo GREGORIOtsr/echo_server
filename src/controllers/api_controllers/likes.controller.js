@@ -9,11 +9,11 @@ const getLikesByUser = async (req, res) => {
         exclude: ["password"],
       },
     });
-    const likes = await Likes.findAll({
-      where: { username: user.dataValues.user_id },
+    let likes = await Likes.findAll({
+      where: { user_id: user.dataValues.user_id },
     });
     likes = likes.map((l) => l.dataValues);
-    res.status(200).json({ likes });
+    res.status(200).json(likes);
   } catch (error) {
     res.status(400).json({ message: `ERROR: ${error.stack}` });
   }
@@ -21,9 +21,9 @@ const getLikesByUser = async (req, res) => {
 
 const getLikesByPost = async (req, res) => {
   try {
-    const likes = await Likes.findAll({ where: { post_id: req.params.postId } });
+    let likes = await Likes.findAll({ where: { post_id: req.params.postId } });
     likes = likes.map((l) => l.dataValues);
-    res.status(200).json({ likes });
+    res.status(200).json(likes);
   } catch (error) {
     res.status(400).json({ message: `ERROR: ${error.stack}` });
   }
@@ -31,9 +31,15 @@ const getLikesByPost = async (req, res) => {
 
 const createLike = async (req, res) => {
   try {
+    const user = await Users.findOne({
+      where: { username: req.query.username },
+      attributes: {
+        exclude: ["password"],
+      },
+    });
     const like = await Likes.create({
-      user_id: req.body.user_id,
-      post_id: req.body.post_id,
+      user_id: user.dataValues.user_id,
+      post_id: req.query.postId,
     });
     res.status(201).json({ message: "Like created.", data: like });
   } catch (error) {
@@ -43,8 +49,14 @@ const createLike = async (req, res) => {
 
 const deleteLike = async (req, res) => {
   try {
+    const user = await Users.findOne({
+      where: { username: req.query.username },
+      attributes: {
+        exclude: ["password"],
+      },
+    });
     await Likes.destroy({
-      where: { user_id: req.body.user_id, post_id: req.params.postId },
+      where: { user_id: user.dataValues.user_id, post_id: req.query.postId },
     });
     res.status(200).json({message: 'Like deleted.'});
   } catch (error) {

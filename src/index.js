@@ -44,11 +44,11 @@ const commentsRoutes = require('./routes/comments.routes');
 const likesRoutes = require('./routes/likes.routes');
 const followsRoutes = require('./routes/follows.routes');
 
-app.use('/users', usersRoutes);
-app.use('/posts', postsRoutes);
-app.use('/comments', commentsRoutes);
-app.use('/likes', likesRoutes);
-app.use('/follows', followsRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/posts', postsRoutes);
+app.use('/api/comments', commentsRoutes);
+app.use('/api/likes', likesRoutes);
+app.use('/api/follows', followsRoutes);
 
 app.listen(port, () => {
     console.log(`>Listening on port: http://localhost:${port}`);

@@ -33,9 +33,9 @@ const getUserByUsername = async (req, res) => {
   }
 };
 
-const createUser = async (data) => {
+const createUser = async (req, res) => {
   try {
-    const user = await Users.create(req.body.data);
+    const user = await Users.create(req.body);
     res.status(201).json({message: 'User created.', data: user.dataValues});
   } catch (error) {
     res.status(400).json({message: `ERROR: ${error.stack}`});
@@ -77,7 +77,7 @@ const deleteUser = async (req, res) => {
     await Comments.destroy({where: {user_id: id}});
     await Comments.destroy({where: {post_id: {[Op.or]: user_posts}}});
     await Posts.destroy({where: {user_id: id}});
-    await Users.destroy({where: {username: username}});
+    await Users.destroy({where: {username: req.params.username}});
     res.status(200).json({message: 'User deleted.'});
   } catch (error) {
     res.status(400).json({message: `ERROR: ${error.stack}`});
