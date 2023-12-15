@@ -81,7 +81,7 @@ const Users = db.define(
      },
      instanceMethods: {
       validPassword: (password) => {
-       return bcrypt.compare(password, this.password);
+       return bcrypt.compareSync(password, this.password);
       }
      }
   },
@@ -92,6 +92,10 @@ const Users = db.define(
     timestamps: true,
   }
 );
+
+Users.prototype.validPassword = (password, hash) => {
+  return bcrypt.compareSync(password, hash);
+ }
 
 Users.sync();
 
