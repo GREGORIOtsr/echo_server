@@ -1,8 +1,6 @@
 const { db } = require("../config/sql_connection");
 const { DataTypes } = require("sequelize");
 
-const Users = require('./users.model');
-
 const Follows = db.define(
   "Follows",
   {
@@ -24,9 +22,6 @@ const Follows = db.define(
     timestamps: true,
   }
 );
-
-Users.hasMany(Follows, {foreignKey: 'following_user_id'});
-Users.hasMany(Follows, {foreignKey: 'followed_user_id'});
 
 Follows.sync();
 

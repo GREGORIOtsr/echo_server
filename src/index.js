@@ -4,9 +4,10 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const helmet = require('helmet')
 const cors = require('cors');
-const path = require('path')
+// const path = require('path');
 require('dotenv').config();
 require('./config/jwt.config')(passport);
+require('./models/associations');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.set("trust proxy", 1);
 app.use(cookieParser());
+app.use('*', cors());
 
 app.use(session({
     secret: process.env.SESSION_SECRET,

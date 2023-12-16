@@ -1,10 +1,6 @@
 const { db } = require("../config/sql_connection");
 const { DataTypes } = require("sequelize");
 
-const Users = require('./users.model');
-// const Comments = require('./comments.model');
-// const Likes = require('./likes.model');
-
 const Posts = db.define(
   "Posts",
   {
@@ -33,10 +29,6 @@ const Posts = db.define(
     timestamps: true,
   }
 );
-
-Users.hasMany(Posts, {foreignKey: 'user_id'});
-// Posts.hasMany(Comments);
-// Posts.hasMany(Likes);
 
 Posts.sync();
 
