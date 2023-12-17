@@ -6,12 +6,12 @@ const Likes = db.define(
   {
     user_id: {
       field: "user_id",
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false
     },
     post_id: {
       field: "post_id",
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false
     }
   },

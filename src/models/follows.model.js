@@ -6,12 +6,12 @@ const Follows = db.define(
   {
     following_user_id: { // User who is following another user
       field: "following_user_id",
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false
     },
     followed_user_id: { // User who is being followed
       field: "followed_user_id",
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false
     }
   },

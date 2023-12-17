@@ -16,7 +16,7 @@ const signUpUser = async (req, res) => {
         .json({ success: false, message: `Email already registered.` });
     }
   } catch (error) {
-    res.status(400).json({ message: `ERROR: ${error.stack}` });
+    res.status(400).json({ message: `ERROR: ${error}` });
   }
 };
 
@@ -26,10 +26,7 @@ const loginUser = async (req, res) => {
     const password = req.body.password || "";
     if (email && password) {
       let user = await Users.findOne({
-        where: { email: email },
-        attributes: {
-          exclude: ["user_id"],
-        },
+        where: { email: email }
       });
       if (!user) {
         res
@@ -44,13 +41,10 @@ const loginUser = async (req, res) => {
         } else {
           user = user.dataValues;
           delete user.password;
-          const data = {
-            email: user.email,
-            username: user.username,
-          };
-          const token = jwt.sign(data, `${process.env.JWT_SECRET}`, {
+          const token = jwt.sign({id: user.user_id}, `${process.env.JWT_SECRET}`, {
             expiresIn: 3600000,
           });
+          console.log(token);
           res
             .status(200)
             .cookie("access-token", token, {
@@ -66,7 +60,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-const signOut = async (req, res) => {
+const signOut = (req, res) => {
   try {
     req.logout(function (err) {
       if (err) {
@@ -80,10 +74,30 @@ const signOut = async (req, res) => {
   }
 };
 
+const checkUser = async (req, res) => {
+  try {
+    if (req.cookies["access-token"]) {
+      const token = jwt.decode(req.cookies["access-token"]);
+      const user = await Users.findOne({
+        where: {user_id: token.id},
+        attributes: {
+          exclude: ["password", "user_id", "updatedAt"]
+        }
+      })
+      res.status(200).json({success: true, user: user});
+    } else {
+      res.status(200).json({success: false, message: 'No user logged in.'});
+    }
+  } catch (error) {
+    res.status(400).json({ message: `ERROR: ${error.stack}` });
+  }
+};
+
 const controllers = {
   signUpUser,
   loginUser,
   signOut,
+  checkUser
 };
 
 module.exports = controllers;

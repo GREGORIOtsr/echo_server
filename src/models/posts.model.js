@@ -6,14 +6,14 @@ const Posts = db.define(
   {
     post_id: {
       field: "id",
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
       allowNull: false,
     },
     user_id: {
       field: "user_id",
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false
     },
     body: {

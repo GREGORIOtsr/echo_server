@@ -62,6 +62,10 @@ app.use('/api/follows', followsRoutes);
 const authRoutes = require('./routes/auth.routes');
 app.use('/', authRoutes);
 
+app.use('*', (req, res) => {
+  res.status(404).json({success: false, message: 'Route not found.'});
+});
+
 app.listen(port, () => {
     console.log(`>Listening on port: http://localhost:${port}`);
 });
