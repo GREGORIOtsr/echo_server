@@ -4,16 +4,23 @@ require("dotenv").config();
 
 const signUpUser = async (req, res) => {
   try {
-    let user = await Users.findOne({ where: { email: req.body.email } });
-    if (!user) {
-      user = await Users.create(req.body);
-      res
-        .status(201)
-        .json({ success: true, message: "User created.", user: user });
-    } else {
+    let user = await Users.findOne({ where: { username: req.body.username } });
+    if (user) {
       res
         .status(409)
-        .json({ success: false, message: `Email already registered.` });
+        .json({ success: false, message: `Username already in use.` });
+    } else {
+      user = await Users.findOne({ where: { email: req.body.email } });
+      if (!user) {
+        user = await Users.create(req.body);
+        res
+          .status(201)
+          .json({ success: true, message: "User created.", user: user });
+      } else {
+        res
+          .status(409)
+          .json({ success: false, message: `Email already registered.` });
+      }
     }
   } catch (error) {
     res.status(400).json({ message: `ERROR: ${error}` });
@@ -22,8 +29,9 @@ const signUpUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
+    console.log(req.body);
     const email = req.body.email || "";
-    const password = req.body.password || "";
+    const password = req.body.pwd || "";
     if (email && password) {
       let user = await Users.findOne({
         where: { email: email }
@@ -44,11 +52,10 @@ const loginUser = async (req, res) => {
           const token = jwt.sign({id: user.user_id}, `${process.env.JWT_SECRET}`, {
             expiresIn: 3600000,
           });
-          console.log(token);
           res
             .status(200)
             .cookie("access-token", token, {
-              httpOnly: true,
+              httpOnly: false,
               sameSite: "strict",
             })
             .json({ success: true, user: user });
@@ -76,8 +83,8 @@ const signOut = (req, res) => {
 
 const checkUser = async (req, res) => {
   try {
-    if (req.cookies["access-token"]) {
-      const token = jwt.decode(req.cookies["access-token"]);
+    if (req.params.token) {
+      const token = jwt.decode(req.params.token);
       const user = await Users.findOne({
         where: {user_id: token.id},
         attributes: {

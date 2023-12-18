@@ -23,6 +23,8 @@ const Follows = db.define(
   }
 );
 
+Follows.schema('public');
+
 Follows.sync();
 
 module.exports = Follows;
