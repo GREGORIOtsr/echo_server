@@ -35,6 +35,8 @@ const Comments = db.define(
   }
 );
 
+Comments.schema('public');
+
 Comments.sync();
 
 module.exports = Comments;

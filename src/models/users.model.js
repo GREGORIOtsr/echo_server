@@ -97,6 +97,8 @@ Users.prototype.validPassword = (password, hash) => {
   return bcrypt.compareSync(password, hash);
  }
 
+Users.schema('public');
+
 Users.sync();
 
 module.exports = Users;
