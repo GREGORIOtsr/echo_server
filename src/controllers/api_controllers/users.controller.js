@@ -27,7 +27,11 @@ const getUserByUsername = async (req, res) => {
         exclude: ["password"],
       },
     });
-    res.status(200).json(user.dataValues);
+    if (!user) {
+      res.status(404).json({success: false, message: "User " + req.params.username + " could not be found."})
+    } else {
+      res.status(200).json({success: true, user: user.dataValues});
+    }
   } catch (error) {
     res.status(400).json({message: `ERROR: ${error.stack}`});
   }

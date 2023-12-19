@@ -68,6 +68,20 @@ app.use('/api/follows', followsRoutes);
 const authRoutes = require('./routes/auth.routes');
 app.use('/', authRoutes);
 
+app.use('/', (req, res) => {
+  res.status(200).json({
+    message: 'Echo server API.', 
+    routes: {
+      users: '/api/users',
+      user_by_username: '/api/users/atuny0',
+      posts: '/api/posts',
+      comments: '/api/comments',
+      likes: '/api/likes',
+      follows: '/api/follows',
+    }
+  });
+});
+
 app.use('*', (req, res) => {
   res.status(404).json({success: false, message: 'Route not found.'});
 });
