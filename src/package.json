@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "feed_db": "node seeds/sequelize.seeds.js"
   },
   "author": "Gregorio Tremont",
   "license": "ISC",

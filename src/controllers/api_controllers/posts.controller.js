@@ -5,7 +5,11 @@ const Likes = require("../../models/likes.model");
 
 const getAllPosts = async (req, res) => {
   try {
-    let posts = await Posts.findAll();
+    let posts = await Posts.findAll({include: [{
+      model: Users,
+      attributes: ['username', 'profile_name', 'profile_picture']
+    }]
+  });
     posts = posts.map((p) => p.dataValues);
     res.status(200).json(posts);
   } catch (error) {
