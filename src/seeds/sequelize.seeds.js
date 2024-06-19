@@ -4,7 +4,6 @@ const Posts = require("../models/posts.model");
 const Comments = require("../models/comments.model");
 const Likes = require("../models/likes.model");
 const Follows = require("../models/follows.model");
-require("../models/associations");
 
 const getDummyUsers = async () => {
   const res = await fetch("https://dummyjson.com/users?limit=50");
@@ -93,19 +92,19 @@ const createFollows = (users) => {
 
 const populateDB = async () => {
   try {
+
     await db.sync({force: true});
 
     const usersArr = await getDummyUsers();
-    const users = await Users.bulkCreate(usersArr);
+    const users = await Users.bulkCreate(usersArr, {returning: true});
 
     const postsArr = await getDummyPosts(users);
-    const posts = await Posts.bulkCreate(postsArr);
+    const posts = await Posts.bulkCreate(postsArr, {returning: true});
 
     const commsArr = await getDummyComments(users, posts);
     await Comments.bulkCreate(commsArr);
 
     const likesArr = createLikes(users, posts);
-    console.log(likesArr);
     await Likes.bulkCreate(likesArr);
 
     const follsArr = createFollows(users);
@@ -116,5 +115,4 @@ const populateDB = async () => {
     console.log(error);
   }
 };
-
 populateDB();

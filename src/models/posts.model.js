@@ -30,8 +30,6 @@ const Posts = db.define(
   }
 );
 
-Posts.schema('public');
-
 Posts.sync();
 
 module.exports = Posts;
