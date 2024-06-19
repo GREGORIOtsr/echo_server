@@ -23,8 +23,6 @@ const Likes = db.define(
   }
 );
 
-Likes.schema('public');
-
 Likes.sync();
 
 module.exports = Likes;

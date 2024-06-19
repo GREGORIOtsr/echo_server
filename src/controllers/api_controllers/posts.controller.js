@@ -7,6 +7,7 @@ const getAllPosts = async (req, res) => {
   try {
     let posts = await Posts.findAll({include: [{
       model: Users,
+      as: 'user',
       attributes: ['username', 'profile_name', 'profile_picture']
     }]
   });

@@ -40,6 +40,7 @@ const getUserByUsername = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const user = await Users.create(req.body);
+    delete user.password
     res.status(201).json({message: 'User created.', data: user.dataValues});
   } catch (error) {
     res.status(400).json({message: `ERROR: ${error.stack}`});

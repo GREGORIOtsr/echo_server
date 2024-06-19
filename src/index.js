@@ -21,7 +21,7 @@ app.set("trust proxy", 1);
 app.use(cookieParser());
 
 const corsOptions ={
-  origin: process.env.DOMAIN_URL, 
+  origin: 'http://localhost:3000/', 
   credentials:true,
   optionSuccessStatus:200,
 };
@@ -73,7 +73,7 @@ app.use('/', (req, res) => {
     message: 'Echo server API.', 
     routes: {
       users: '/api/users',
-      user_by_username: '/api/users/atuny0',
+      user_by_username: '/api/users/<username>',
       posts: '/api/posts',
       comments: '/api/comments',
       likes: '/api/likes',
