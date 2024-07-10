@@ -24,14 +24,13 @@ User authentication is made with JWT. Through the '/login' route, after is verif
 
 ### Instructions ###
 
-To install all dependencies you must run the next command inside the /src folder:
+To install all dependencies you must run the next command **inside the /src folder**:
 
 ```
-cd src
 npm install
 ```
 
-This project contains seeds to feed the database, you can run it by using *inside the /src folder* the command:
+This project contains seeds to feed the database, you can run it by using **inside the /src folder** the command:
 
 ```
 npm run feed_db
